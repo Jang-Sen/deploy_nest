@@ -14,7 +14,7 @@ RUN chown -R node:node /usr/src/app
 COPY package*.json ./
 
 # Install app dependencies
-RUN npm ci
+RUN npm install --force
 
 # Copy application source code
 COPY . .

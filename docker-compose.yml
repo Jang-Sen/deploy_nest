@@ -26,11 +26,11 @@ services:
       context: .
       dockerfile: Dockerfile
       target: development
-    #    volumes:
-    #      - .:/usr/src/app
+    volumes:
+      - .:/usr/src/app
     env_file:
       - .env
-    command: npm run start:dev
+    command: npm run start:prod
     ports:
       - "3000:3000"
     depends_on:

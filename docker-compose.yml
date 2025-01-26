@@ -1,0 +1,54 @@
+version: "3.8" # 버전을 명시합니다.
+
+services:
+  #  jangwon_nginx:
+  #    image: nginx:stable-alpine
+  #    container_name: jangwon_nginx
+  #    volumes:
+  #      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+  #      - ./nginx/templates:/etc/nginx/templates
+  #      - ./.cert/cert.pem:/etc/nginx/.cert/cert.pem
+  #      - ./.cert/key.pem:/etc/nginx/.cert/key.pem
+  #    ports:
+  #      - "80:80"
+  #      - "443:443"
+  #    depends_on:
+  #      - jangwon_frontend
+  #      - jangwon_backend_01
+  #      - jangwon_backend_02
+  #      - jangwon_minio
+  #    networks:
+  #      - jangwon_networks
+
+  backend:
+    container_name: deploy_backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    volumes:
+      - .:/usr/src/app
+    env_file:
+      - .env
+    command: npm run start:dev
+    ports:
+      - "3000:3000"
+    depends_on:
+      - deploy_postgres
+    networks:
+      - deploy_networks
+
+  deploy_postgres:
+    container_name: deploy_postgres
+    image: postgres:latest
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    networks:
+      - deploy_networks
+
+networks:
+  deploy_networks: # 이름 수정
+    driver: bridge
